@@ -63,6 +63,8 @@
 - `-f docker_compose_file` -> to build and run container using the docker-compose config files (of one or more files).
   - dev -> `docker-compose -f docker-compose.yaml -f docker-compose.dev.yaml up -d`
   - prod -> `docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d`
+- `-V` substitutes the anonimous volumes created when building images
+- `--scale name_of_app_in_compose_file=num_of_replicas` -> to scale on or more apps: `docker-compose -f [files] up -d -V --build --scale node-app=2` 
 
 **Notes**
 - when using docker-compose it will create a network for the containers. this network has a DNS (name) that can be referred to in your docker files by the name put into the volumes section
