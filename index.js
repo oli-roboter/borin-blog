@@ -1,8 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
-// const session = require("express-session");
-// const redis = require("redis");
-// let RedisStore = require("connect-redis")(session);
+const session = require("express-session");
+const { createClient } = require("redis");
+let RedisStore = require("connect-redis")(session);
 
 const {
   MONGO_USER,
@@ -13,14 +13,21 @@ const {
   REDIS_PORT,
   SESSION_SECRET,
 } = require('./config');
+
 const postRouter = require('./routes/postRoutes');
 const userRouter = require('./routes/userRoutes');
 
+let redisClient = createClient({
+  legacyMode: true,
+  socket: {
+    port: REDIS_PORT,
+    host: REDIS_URL
+  }
+});
+redisClient.connect().catch(console.error);
+
+
 const app = express();
-// const redisClient = redis.createClient({
-//   host: REDIS_URL,
-//   port: REDIS_PORT
-// })
 /*
 connection string is mongodb://user:password@ip-address:port/options
 I can use "mongoloide" for the ip address because i added it to the volumes section in the 
@@ -33,7 +40,9 @@ const connectWithRetry = () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-    .then(() => console.log('Connected to mongoloid DB!'))
+    .then(() => {
+      console.log('Connected to mongoloid DB!')
+    })
     .catch((e) => {
       console.error(`Error connecting to DB:${e.message}`);
       setTimeout(connectWithRetry, 5000);
@@ -48,17 +57,17 @@ the code logic will try to connect
 connectWithRetry();
 
 //MIDDLEWARE SECTION
-// app.use(session({
-//   store: new RedisStore({ client: redisClient }),
-//   secret: SESSION_SECRET,
-//   cookie: {
-//     secure: false,
-//     resave: false,
-//     saveUninitialized: false,
-//     httpOnly: true,
-//     maxAge: 30000
-//   }
-// }))
+app.use(session({
+  store: new RedisStore({ client: redisClient }),
+  secret: SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false,
+    httpOnly: true,
+    maxAge: 300000
+  }
+}))
 
 app.use(express.json());
 app.get('/', (req, res) => {
