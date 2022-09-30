@@ -1,0 +1,27 @@
+version: "3"
+services:
+  node-app:
+    # Builds from dockerfile
+    build: .
+    ports:
+      - "3000:3000"
+    env_file: 
+      - ./.env
+    depends_on:
+      # This wll always make sure that mongo starts before the node app
+      - mongoloide
+
+  mongoloide:
+    image: mongo
+    # Look into mongo docs to see what is required
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: oliver
+      MONGO_INITDB_ROOT_PASSWORD: 12345678 
+    volumes:
+      # path to container from mongo docs = /data/db. To name the volume -> mongoloide: path to db
+      - mongoloide-db:/data/db 
+  redis:
+    image: redis
+# Section for names used across application
+volumes:
+  mongoloide-db: 

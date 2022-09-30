@@ -1,0 +1,23 @@
+version: "3"
+services:
+  node-app:
+    build:
+      context: .
+      # args getting passed into dockerfile
+      args:
+        NODE_ENV: development
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - MONGO_USER=oliver
+      - MONGO_PASSWORD=12345678
+      - SESSION_SECRET=mysecret
+    command: npm run dev
+  mongoloide:
+    image: mongo
+    # Look into mongo docs to see what is required
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=oliver
+      - MONGO_INITDB_ROOT_PASSWORD=12345678
