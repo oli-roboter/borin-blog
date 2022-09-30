@@ -1,10 +1,20 @@
 version: "3"
 services:
+  nginx:
+    image: nginx:stable-alpine
+    # ports in the dev and prod files
+    # bind volume
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - node-app
+
   node-app:
     # Builds from dockerfile
     build: .
-    ports:
-      - "3000:3000"
+    # ports removed after adding them to the nginx
+    # ports:
+    #   - "3000:3000"
     env_file: 
       - ./.env
     depends_on:
