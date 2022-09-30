@@ -1,8 +1,4 @@
-# Docekr training
-
-
-
-
+# Docker training
 
 ## CLI Commands:
 
@@ -14,7 +10,7 @@
 - `docker network ls` -> lists all networks 
 
 ### removing images volumes and containers
-- `docker rm "container_id" -> removes container
+- `docker rm "container_id"` -> removes container
 - `docker rmi "image id" or"image name` -> removes image
 - `docker volume rm volume_id` -> removes volume by id
 - `docker volume rm prune` -> removes all volumes not attached to a docker container
